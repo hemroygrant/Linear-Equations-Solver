@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Linear Equations Solver</title>
+</head>
+<style>
+    .col{width: 40%; text-align: center; background-color: gray; border: 0.5rem solid rgb(179, 179, 179); margin-left: 4%; margin-right: 4%; margin-bottom: 2rem;}
+    .col-12{width: 100%; font-size: 1em;}
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        font-size: 1.5em;
+    }
+    .row::after {
+        content: "";
+        clear: both;
+        display: block;
+    }
+    @media only screen and (max-width: 768px) {
+    .col{width: 90%;}
+    }
+    input{
+        width: 10%;
+
+    }
+    h1{
+        font-size: 3em;
+        text-align: center;
+    }
+    button{
+        width: 25%;
+        font-size: 1em;
+        margin: 1rem;
+    }
+    #mbot, #mtop{
+        border-left: 1px solid black;
+        border-right: 1px solid black;
+    }
+    table{
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+</style>
+<body>
+    <h1>Linear Equations Solver</h1>
+    <div class="row">
+        <div class="col">
+            <h2>2 x 2 Equation</h2>
+            <input type="number" id="xone"><strong><em> x</em> +</strong>
+            <input type="number" id="yone"><strong><em> y</em> =</strong>
+            <input type="number" id="eone"><br>
+            <input type="number" id="xtwo"><strong><em> x</em> +</strong>
+            <input type="number" id="ytwo"><strong><em> y</em> =</strong>
+            <input type="number" id="etwo"><br>
+            <p></p>
+            <button onclick="cal2x2('xone', 'yone', 'eone', 'xtwo', 'ytwo', 'etwo')">Solve</button>
+            <div id="answer2"><em>Enter values then click solve</em></div>
+        </div>
+        <div class="col">
+            <h2>3 x 3 Equation</h2>
+            <input type="number" id="x1"><strong><em> x</em> +</strong>
+            <input type="number" id="y1"><strong><em> y</em> +</strong>
+            <input type="number" id="z1"><strong><em> z</em> =</strong>
+            <input type="number" id="e1"><br>
+            <input type="number" id="x2"><strong><em> x</em> +</strong>
+            <input type="number" id="y2"><strong><em> y</em> +</strong>
+            <input type="number" id="z2"><strong><em> z</em> =</strong>
+            <input type="number" id="e2"><br>
+            <input type="number" id="x3"><strong><em> x</em> +</strong>
+            <input type="number" id="y3"><strong><em> y</em> +</strong>
+            <input type="number" id="z3"><strong><em> z</em> =</strong>
+            <input type="number" id="e3"><br>
+            <button onclick="cal3x3('x1', 'y1', 'z1', 'e1', 'x2', 'y2', 'z2', 'e2', 'x3', 'y3', 'z3', 'e3')">Solve</button>
+            <div id="answer3"><em>Enter values then click solve</em></div>
+        </div>
+    </div>
+
+<script>
+    function cal2x2(x1,y1,e1,x2,y2,e2){
+        //get the value of the inputs
+        var xone = document.getElementById(x1).value;
+        var xtwo = document.getElementById(x2).value;
+        var yone = document.getElementById(y1).value;
+        var ytwo = document.getElementById(y2).value;
+        var eone = document.getElementById(e1).value;
+        var etwo = document.getElementById(e2).value;
+        //calculate the determinants of d, dx and dy
+        var d = (xone*ytwo)-(yone*xtwo);
+        var dx = (eone*ytwo)-(yone*etwo);
+        var dy = (xone*etwo)-(eone*xtwo);
+        //find x and y by using cramer's rule
+        var x = dx/d;
+        var y = dy/d;
+        var x = x.toFixed(3);
+        var y = y.toFixed(3);
+        // checks if x or y = infinity or if x or y is unsolvable
+        if (isNaN(x) || isNaN(y) ){
+            document.getElementById("answer2").innerHTML = "x and y has infinitely many solution or is unsolvable.";
+        }
+        else{ //display answer
+            document.getElementById("answer2").innerHTML = "<strong><em>x = </em></strong>" +x+ "&nbsp; <strong><em>,&nbsp; y = </em></strong>" +y;
+            //show steps taken to find answer
+            var nd = document.createElement("DIV");
+            nd.setAttribute("class","col-12")
+            nd.innerHTML = "<strong><table style='text-align: center;'><tr><td>"+xone+"x + "+yone+"y = "+eone+"</td><td rowspan='2'>=></td><td id='mtop'>"+xone+" "+yone+"</td><td>| x |</td><td rowspan='2'>=</td><td id='mtop'>"+eone+"</td></tr><tr><td>"+xtwo+"x + "+ytwo+"y = "+etwo+"</td><td id='mbot'>"+xtwo+" "+ytwo+"</td><td>| y |</td><td id='mbot'>"+etwo+"</td></tr><tr><td colspan='5'></td></tr><tr><td rowspan='2'>D  =</td><td id='mtop'>"+xone+" "+yone+"</td><td rowspan='2'>=</td><td rowspan='2'>("+xone+")("+ytwo+") - ("+yone+")("+xtwo+")</td><td rowspan='2'>= "+d+"</td></tr><tr><td id='mbot'>"+xtwo+" "+ytwo+"</td></tr><tr><td colspan='5'></td></tr><tr><td rowspan='2'>Dx =</td><td id='mtop'>"+eone+" "+yone+"</td><td rowspan='2'>=</td><td rowspan='2'>("+eone+")("+ytwo+") - ("+yone+")("+etwo+")</td><td rowspan='2'>= "+dx+"</td></tr><tr><td id='mbot'>"+etwo+" "+ytwo+"</td></tr><tr><td colspan='5'></td></tr><tr><td rowspan='2'>Dy =</td><td id='mtop'>"+xone+" "+eone+"</td><td rowspan='2'>=</td><td rowspan='2'>("+xone+")("+etwo+") - ("+eone+")("+xtwo+")</td><td rowspan='2'>= "+dy+"</td></tr><tr><td id='mbot'>"+xtwo+" "+etwo+"</td></tr><tr><td colspan='5'></td></tr><tr><td>X  = </td><td> "+dx+" / "+d+" </td><td> = "+x+"</td></tr><tr><td colspan='5'></td></tr><tr><td>Y  = </td><td> "+dy+" / "+d+" </td><td> = "+y+"</td></tr></table></strong>";
+            document.body.appendChild(nd);
+        }
+    }
+    function cal3x3(xone,yone,zone,eone,xtwo,ytwo,ztwo,etwo,xthree,ythree,zthree,ethree){
+        //get the value of the inputs
+        var x1 = document.getElementById(xone).value;
+        var x2 = document.getElementById(xtwo).value;
+        var x3 = document.getElementById(xthree).value;
+        var y1 = document.getElementById(yone).value;
+        var y2 = document.getElementById(ytwo).value;
+        var y3 = document.getElementById(ythree).value;
+        var z1 = document.getElementById(zone).value;
+        var z2 = document.getElementById(ztwo).value;
+        var z3 = document.getElementById(zthree).value;
+        var e1 = document.getElementById(eone).value;
+        var e2 = document.getElementById(etwo).value;
+        var e3 = document.getElementById(ethree).value;
+        //calculate the determinants of d, dx, dy and dz
+        var d = ((x1*y2*z3)+(y1*z2*x3)+(z1*x2*y3))-((x3*y2*z1)+(y3*z2*x1)+(z3*x2*y1));
+        var dx = ((e1*y2*z3)+(y1*z2*e3)+(z1*e2*y3))-((e3*y2*z1)+(y3*z2*e1)+(z3*e2*y1));
+        var dy = ((x1*e2*z3)+(e1*z2*x3)+(z1*x2*e3))-((x3*e2*z1)+(e3*z2*x1)+(z3*x2*e1));
+        var dz = ((x1*y2*e3)+(y1*e2*x3)+(e1*x2*y3))-((x3*y2*e1)+(y3*e2*x1)+(e3*x2*y1));
+        //find x, y and z by using cramer's rule
+        var x = dx/d;
+        var y = dy/d;
+        var z = dz/d;
+        var x = x.toFixed(3);
+        var y = y.toFixed(3);
+        var z = z.toFixed(3);
+        // checks if x or y or z = infinity or if x or y or z is unsolvable
+        if (isNaN(x) || isNaN(y) ){
+            document.getElementById("answer3").innerHTML = "x, y and z has infinitely many solution or is unsolvable.";
+        }
+        else{ //display answer
+            document.getElementById("answer3").innerHTML = "<strong><em>x = </em></strong>" +x+ "&nbsp; <strong><em>,&nbsp; y = </em></strong>" +y+ "<strong><em>and z = </em></strong>" +z;
+        }
+    }
+</script>
+
+</body>
+</html>
+
+
+
+
+<!-- var dn = document.createElement("DIV");
+dn.setAttribute("class","col-12")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             //D start                                                                                                                                                                                                                                                                                                                                                                                                  
+dn.innerHTML = "<strong><table style='text-align: center;'><tr><td>"+x1+"x + "+y1+"y + "+z1+"z = "+e1+"</td><td rowspan='3'>=></td><td id='mtop'>"+x1+" "+y1+" "+z1+"</td><td>| x |</td><td rowspan='3'>=</td><td id='mtop'>"+e1+"</td></tr><tr><td>"+x2+"x + "+y2+"y + "+z2+"z = "+e2+"</td><td id='mbot'>"+x2+" "+y2+" "+z2+"</td><td>| y |</td><td id='mbot'>"+e2+"</td></tr><tr><td>"+x3+"x + "+y3+"y + "+z3+"z = "+e3+"</td><td id='mbot'>"+x3+" "+y3+" "+z3+"</td><td>| z |</td><td id='mbot'>"+e3+"</td></tr><tr><td colspan='5'></td></tr><tr><td rowspan='3'>D  =</td><td id='mtop'>"+x1+" "+y1+" "+z1+"</td><td id='mtop'>"+x1+" "+y1+"</td><td rowspan='3'>=</td><td rowspan='3'>[("+x1+")("+y2+")("+z3+") + ("+y1+")("+z2+")("+x3+") + ("+z1+")("+x2+")("+y3+")]" - "[("+x3+")("+y2+")("+z1+") + ("+y3+")("+z2+")("+x1+") + ("+z3+")("+x2+")("+y1+")]</td><td rowspan='3'>= "+d+"</td></tr><tr><td id='mbot'>"+x2+" "+y2+" "+z2+"</td><td id='mtop'>"+x2+" "+y2+"</td></tr><tr><td id='mbot'>"+x3+" "+y3+" "+z3+"</td><td id='mbot'>"+x3+" "+y3+"</td></tr><tr><td colspan='5'></td></tr><tr><td rowspan='3'>Dx  =</td><td id='mtop'>"+e1+" "+y1+" "+z1+"</td><td id='mtop'>"+e1+" "+y1+"</td><td rowspan='3'>=</td><td rowspan='3'>[("+e1+")("+y2+")("+z3+") + ("+y1+")("+z2+")("+e3+") + ("+z1+")("+e2+")("+y3+")]" - "[("+e3+")("+y2+")("+z1+") + ("+y3+")("+z2+")("+e1+") + ("+z3+")("+e2+")("+y1+")]</td><td rowspan='3'>= "+dx+"</td></tr><tr><td id='mbot'>"+e2+" "+y2+" "+z2+"</td><td id='mtop'>"+e2+" "+y2+"</td></tr><tr><td id='mbot'>"+e3+" "+y3+" "+z3+"</td><td id='mbot'>"+e3+" "+y3+"</td></tr><tr><td colspan='5'></td></tr><tr><td rowspan='3'>Dy  =</td><td id='mtop'>"+x1+" "+e1+" "+z1+"</td><td id='mtop'>"+x1+" "+e1+"</td><td rowspan='3'>=</td><td rowspan='3'>[("+x1+")("+e2+")("+z3+") + ("+e1+")("+z2+")("+x3+") + ("+z1+")("+x2+")("+e3+")]" - "[("+x3+")("+e2+")("+z1+") + ("+e3+")("+z2+")("+x1+") + ("+z3+")("+x2+")("+e1+")]</td><td rowspan='3'>= "+dy+"</td></tr><tr><td id='mbot'>"+x2+" "+e2+" "+z2+"</td><td id='mtop'>"+x2+" "+e2+"</td></tr><tr><td id='mbot'>"+x3+" "+e3+" "+z3+"</td><td id='mbot'>"+x3+" "+e3+"</td></tr><tr><td colspan='5'></td></tr><tr><td rowspan='3'>Dz  =</td><td id='mtop'>"+x1+" "+y1+" "+e1+"</td><td id='mtop'>"+x1+" "+y1+"</td><td rowspan='3'>=</td><td rowspan='3'>[("+x1+")("+y2+")("+e3+") + ("+y1+")("+e2+")("+x3+") + ("+e1+")("+x2+")("+y3+")]" - "[("+x3+")("+y2+")("+e1+") + ("+y3+")("+e2+")("+x1+") + ("+e3+")("+x2+")("+y1+")]</td><td rowspan='3'>= "+dz+"</td></tr><tr><td id='mbot'>"+x2+" "+y2+" "+e2+"</td><td id='mtop'>"+x2+" "+y2+"</td></tr><tr><td id='mbot'>"+x3+" "+y3+" "+e3+"</td><td id='mbot'>"+x3+" "+y3+"</td></tr><tr><td colspan='5'></td></tr><tr><td>X  = </td><td> "+dx+" / "+d+" </td><td> = "+x+"</td></tr><tr><td colspan='5'></td></tr><tr><td>Y  = </td><td> "+dy+" / "+d+" </td><td> = "+y+"</td></tr><tr><td colspan='5'></td></tr><tr><td>Z  = </td><td> "+dz+" / "+d+" </td><td> = "+z+"</td></tr></table></strong>";
+document.body.appendChild(dn); -->
